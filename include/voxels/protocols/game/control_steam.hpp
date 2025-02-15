@@ -21,30 +21,38 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 namespace voxels::protocols::game {
     template<LocalEndpointType EndpointType = Client>
-    class ControlSteam;
+    class ControlStream;
 }
 
 namespace voxels::protocols::game::responses {
-    struct ControlSteamResponse {};
+    struct ControlStreamResponse {};
 
     template<LocalEndpointType EndpointT = Client>
     struct Identity {};
 
+    using IdentityDataT = int;
+
     template<>
-    struct Identity<Client> : ControlSteamResponse, Reply<int> {
+    struct Identity<Client> : ControlStreamResponse, Reply<IdentityDataT> {
         using Reply::operator*;
         using Reply::operator->;
+
+        explicit Identity(std::unique_ptr<IdentityDataT>& Data) : Reply(std::move(Data)) {}
     };
 
     template<>
-    struct Identity<Server> : ControlSteamResponse, Reply<std::string, Server> {};
+    struct Identity<Server> : ControlStreamResponse, Reply<IdentityDataT, Server> {
+        using Reply::operator*;
+        using Reply::operator->;
 
+        explicit Identity(std::unique_ptr<IdentityDataT>& Data) : Reply(std::move(Data)) {}
+    };
 }
 
 namespace voxels::protocols::game::events {
     template<LocalEndpointType EndpointT = Client>
     struct ControlStreamEvent {
-        using ControlStreamT = ControlSteam<EndpointT>;
+        using ControlStreamT = ControlStream<EndpointT>;
 
         std::weak_ptr<ControlStreamT> ControlStream_;
     };
@@ -84,7 +92,7 @@ namespace voxels::protocols::game::events {
 }
 
 namespace voxels::protocols::game {
-    template<LocalEndpointType EndpointType = Client>
+    template<LocalEndpointType EndpointType>
     class ControlStream;
 
     // specialisation for server
@@ -111,7 +119,7 @@ namespace voxels::protocols::game {
 
 
     template<>
-    class ControlSteam<Client> : public Stream<Client> {
+    class ControlStream<Client> : public Stream<Client> {
         // specialization of response and event types
         using IdentityResponseT = responses::Identity<Client>;
         using IdentityReceivedEventT = events::IdentityReceived<Server>;

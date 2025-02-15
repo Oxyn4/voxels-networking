@@ -21,9 +21,11 @@ namespace voxels::protocols::game {
 }
 
 namespace voxels::protocols::game::responses {
-    class ControlStreamResponse {};
+    struct ControlStreamResponse;
 
-    class ControlStreamInitiated final : public ControlStreamResponse {};
+    class ControlStreamInitiated final : public ControlStreamResponse {
+
+    };
 }
 
 namespace voxels::protocols::game::events {
@@ -34,8 +36,7 @@ namespace voxels::protocols::game::events {
     public:
         std::weak_ptr<ConnectionT> Connection_;
 
-        explicit ConnectionEvent(const std::weak_ptr<ConnectionT>& Connection_)
-            : Connection_(Connection_) {};
+        explicit ConnectionEvent(const std::weak_ptr<ConnectionT>& Connection_) : Connection_(Connection_) {};
     };
 
     template<LocalEndpointType EndpointT = Client>
@@ -52,13 +53,13 @@ namespace voxels::protocols::game::events {
 }
 
 namespace voxels::protocols::game {
-    template<LocalEndpointType EndpointT> class Connection final : public EventDispatcher {
+    template<LocalEndpointType EndpointT>
+    class Connection final : public EventDispatcher {
         using ControlStreamInitiatedEventT = events::ControlStreamInitiated<EndpointT>;
 
-    private:
+    public:
         boost::asio::ip::udp::endpoint RemoteEndpoint;
 
-    public:
         // the signals for events associated with a connection
         boost::signals2::signal<
           responses::ControlStreamInitiated(const ControlStreamInitiatedEventT&)

@@ -59,3 +59,5 @@ public:
       return API.get();
   }
 };
+
+namespace voxels::protocols::game::quic {}

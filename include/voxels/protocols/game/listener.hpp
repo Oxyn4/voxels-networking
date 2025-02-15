@@ -38,7 +38,7 @@ namespace voxels::protocols::game::events {
         using ConnectionT = Connection<Server> ;
 
     public:
-        const std::weak_ptr<Listener> Listener_;
+        std::weak_ptr<Listener> Listener_;
 
         explicit ListenerEvent(const std::weak_ptr<Listener> &Listener_) : Listener_(Listener_) {}
     };
@@ -47,7 +47,7 @@ namespace voxels::protocols::game::events {
         using ConnectionT = Connection<Server> ;
 
     public:
-        const std::weak_ptr<ConnectionT> Connection_;
+        std::weak_ptr<ConnectionT> Connection_;
 
         NewConnectionEvent(const std::weak_ptr<Listener>& Listener_, const std::weak_ptr<ConnectionT>& Connection) : ListenerEvent(Listener_), Connection_(Connection) {}
     };
@@ -69,7 +69,7 @@ namespace voxels::protocols::game {
             std::shared_ptr<ConnectionT>
         > Connections;
     public:
-        explicit Listener(const boost::asio::ip::address& Address, const uint16_t Port) : LocalEndpoint(Address, Port) {};
+        Listener(const boost::asio::ip::address& Address, const uint16_t Port) : LocalEndpoint(Address, Port) {};
         ~Listener() = default;
 
         // each different event gets a signal which manages multiple Callback functions for that event

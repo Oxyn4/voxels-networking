@@ -15,6 +15,8 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 #include "response.hpp"
 #include "event_dispatcher.hpp"
 
+#include <memory>
+
 namespace voxels::protocols::game {
     template<LocalEndpointType EndpointT>
     class Stream;
@@ -44,6 +46,8 @@ namespace voxels::protocols::game::responses {
         const ReplyT* operator->() {
             return Data.get();
         }
+
+        explicit Reply(std::unique_ptr<ReplyT>&& Data) : Data(std::move(Data)) {}
     };
 }
 
@@ -76,6 +80,8 @@ namespace voxels::protocols::game::events {
         const ReceivedT* operator->() {
             return Data.get();
         }
+
+        explicit Received(std::unique_ptr<ReceivedT>&& Data) : Data(std::move(Data)) {}
     };
 
     template<class SentT, LocalEndpointType EndpointT = Client>
@@ -99,6 +105,8 @@ namespace voxels::protocols::game::events {
         const SentT* operator->() {
             return Data.get();
         }
+
+        explicit Sent(std::unique_ptr<SentT>&& Data) : Data(std::move(Data)) {}
     };
 }
 

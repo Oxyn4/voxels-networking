@@ -1,5 +1,5 @@
 
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -13,7 +13,6 @@ project(
 
 find_package(Boost CONFIG REQUIRED COMPONENTS
         log # debugging and code observability
-        asio # provides various useful networking classes for udp
 )
 
 add_library(voxels_networking INTERFACE)

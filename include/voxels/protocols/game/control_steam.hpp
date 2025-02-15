@@ -11,35 +11,119 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #pragma once
 
+
 #include <boost/signals2.hpp>
+
+#include "stream.hpp"
 
 #include <memory>
 
+
 namespace voxels::protocols::game {
-    struct Server;
-    struct Client;
-
-    template<typename EndpointType>
-    concept LocalEndpointType = std::is_same_v<EndpointType, Client> || std::is_same_v<EndpointType, Server>;
-
     template<LocalEndpointType EndpointType = Client>
     class ControlSteam;
 }
 
 namespace voxels::protocols::game::responses {
+    struct ControlSteamResponse {};
+
+    template<LocalEndpointType EndpointT = Client>
+    struct Identity {};
+
+    template<>
+    struct Identity<Client> : ControlSteamResponse, Reply<int> {
+        using Reply::operator*;
+        using Reply::operator->;
+    };
+
+    template<>
+    struct Identity<Server> : ControlSteamResponse, Reply<std::string, Server> {};
 
 }
 
 namespace voxels::protocols::game::events {
+    template<LocalEndpointType EndpointT = Client>
+    struct ControlStreamEvent {
+        using ControlStreamT = ControlSteam<EndpointT>;
+
+        std::weak_ptr<ControlStreamT> ControlStream_;
+    };
+
+    template<LocalEndpointType EndpointT = Client>
+    struct IdentityReceived;
+
+    template<>
+    struct IdentityReceived<Client> : ControlStreamEvent<Client>, Received<int, Client> {
+        using Received::operator*;
+        using Received::operator->;
+    };
+
+    template<>
+    struct IdentityReceived<Server> : ControlStreamEvent<Server>, Received<std::string, Server> {
+        using Received::operator*;
+        using Received::operator->;
+    };
+
+
+    template<LocalEndpointType EndpointT = Client>
+    struct IdentitySent;
+
+    template<>
+    struct IdentitySent<Client> : ControlStreamEvent<Client>, Sent<int, Client> {
+        using Sent::operator*;
+        using Sent::operator->;
+    };
+
+    template<>
+    struct IdentitySent<Server> : ControlStreamEvent<Server>, Sent<std::string, Server> {
+        using Sent::operator*;
+        using Sent::operator->;
+    };
+
 
 }
 
 namespace voxels::protocols::game {
     template<LocalEndpointType EndpointType>
-    class ControlStream {
+    class ControlStream;
+
+    // specialisation for server
+
+    template<>
+    class ControlStream<Server> : public Stream<Server> {
+        // specialization of response and event types
+        using IdentityResponseT = responses::Identity<Server>;
+        using IdentityReceivedEventT = events::IdentityReceived<Client>;
+        using IdentitySentT = events::IdentitySent<Server>;
     private:
 
     public:
+        boost::signals2::signal<
+            IdentityResponseT(const IdentityReceivedEventT&)
+        > IdentityReceivedSignal;
 
+        boost::signals2::signal<
+            void(const IdentitySentT&)
+        > IdentitySentSignal;
+    };
+
+    // specialisation for client
+
+    template<>
+    class ControlSteam<Client> : public Stream<Client> {
+        // specialization of response and event types
+        using IdentityResponseT = responses::Identity<Client>;
+        using IdentityReceivedEventT = events::IdentityReceived<Server>;
+        using IdentitySentT = events::IdentitySent<Client>;
+    private:
+
+    public:
+        boost::signals2::signal<
+            IdentityResponseT(const IdentityReceivedEventT&)
+        > IdentityReceivedSignal;
+
+        boost::signals2::signal<
+            void(const IdentitySentT&)
+        > IdentitySentSignal;
     };
 }

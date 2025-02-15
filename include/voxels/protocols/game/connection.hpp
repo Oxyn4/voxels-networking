@@ -11,6 +11,8 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #pragma once
 
+#include <boost/asio.hpp>
+
 #include "control_steam.hpp"
 
 namespace voxels::protocols::game {
@@ -51,15 +53,16 @@ namespace voxels::protocols::game::events {
 
 namespace voxels::protocols::game {
     template<LocalEndpointType EndpointT>
-    class Connection final {
-        using ControlStreamInitiatedT = events::ControlStreamInitiated<EndpointT>;
+    class Connection final : public EventDispatcher {
+        using ControlStreamInitiatedEventT = events::ControlStreamInitiated<EndpointT>;
 
     private:
+        boost::asio::ip::udp::endpoint RemoteEndpoint;
 
     public:
         // the signals for events associated with a connection
         boost::signals2::signal<
-          responses::ControlStreamInitiated(const ControlStreamInitiatedT&)
+          responses::ControlStreamInitiated(const ControlStreamInitiatedEventT&)
         > ControlStreamInitiatedSignal;
 
     };

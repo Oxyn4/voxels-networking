@@ -12,10 +12,12 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 #pragma once
 
 #include "connection.hpp"
+#include "event_dispatcher.hpp"
 
 #include <boost/signals2.hpp>
 
 #include <boost/asio.hpp>
+
 
 #include <memory>
 
@@ -53,7 +55,7 @@ namespace voxels::protocols::game::events {
 namespace voxels::protocols::game {
 
     // The listener works as an event dispatcher for events related to managing connections
-    class Listener final {
+    class Listener final : public EventDispatcher {
         using ConnectionT = Connection<Server>;
 
     private:

@@ -15,6 +15,11 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #include <memory>
 
+#include "listener.hpp"
+#include "listener.hpp"
+#include "listener.hpp"
+#include "listener.hpp"
+
 // singleton class that manages a unique ptr to msquic API table
 class msquic {
 private:
@@ -60,4 +65,44 @@ public:
   }
 };
 
-namespace voxels::protocols::game::quic {}
+namespace voxels::protocols::game::quic {
+    struct ListenerSettings {
+        std::chrono::milliseconds Timeout;
+
+        ListenerSettings()
+            : Timeout(std::chrono::milliseconds(5000)) {};
+
+        // ReSharper disable once CppNonExplicitConversionOperator
+        operator QUIC_SETTINGS () const {
+            QUIC_SETTINGS New = {0};
+
+            New.IdleTimeoutMs = Timeout.count();
+            New.IsSet.IdleTimeoutMs = true;
+
+            return New;
+        }
+    };
+
+    template<class ContextT>
+    class Listener {
+    private:
+        HQUIC Handle = nullptr;
+
+        QUIC_SETTINGS QuicSettings = {0};
+
+        ContextT* ContextPointer;
+    public:
+        // constructors
+        explicit Listener(ContextT* ContextPointer_, const ListenerSettings& Settings) : QuicSettings(Settings), ContextPointer(ContextPointer_) {}
+
+        void Open() const {}
+
+        void Start() const {}
+
+        // A C compatible callback function to be passed to msquic
+        static QUIC_STATUS EventForwarder(HQUIC Handle, Listener* Context, QUIC_LISTENER_EVENT* Event) {
+
+            return QUIC_STATUS_SUCCESS;
+        }
+    };
+}

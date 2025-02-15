@@ -4,10 +4,10 @@
 using namespace voxels::protocols::game;
 
 
-responses::Identity<Server> IdentityReceivedHandler(const events::IdentityReceived<Client>& Event) {
+responses::ServerIdentity IdentityReceivedHandler(const events::ClientIdentityReceived& Event) {
     std::unique_ptr<int> Data(new int(42));
 
-    responses::Identity<Server> Response(Data);
+    responses::ServerIdentity Response(Data);
 
     return Response;
 }
@@ -29,7 +29,9 @@ responses::NewConnection NewConnectionHandler(const events::NewConnectionEvent& 
 }
 
 int main() {
-    Listener Listener_(boost::asio::ip::make_address("127.0.0.1"));
+    const ListenerSettings Settings;
+
+    Listener Listener_(Settings, boost::asio::ip::make_address("127.0.0.1"));
 
     Listener_.NewConnectionSignal.connect(NewConnectionHandler);
 

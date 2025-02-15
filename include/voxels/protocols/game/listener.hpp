@@ -18,10 +18,9 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #include <boost/asio.hpp>
 
-
 #include <memory>
 
-#include <boost/hana.hpp>
+#include "msquic.hpp"
 
 namespace voxels::protocols::game {
     class Listener;
@@ -35,7 +34,7 @@ namespace voxels::protocols::game::responses {
 
 namespace voxels::protocols::game::events {
     class ListenerEvent {
-        using ConnectionT = Connection<Server> ;
+        using ConnectionT = Connection<Server>;
 
     public:
         std::weak_ptr<Listener> Listener_;
@@ -55,8 +54,19 @@ namespace voxels::protocols::game::events {
 }
 
 namespace voxels::protocols::game {
-    struct ListenerSettings {
+
+    struct ListenerSettings final {
         std::chrono::milliseconds Timeout;
+
+        ListenerSettings() : Timeout(std::chrono::milliseconds(5000)) {}
+
+        operator quic::ListenerSettings () const {
+            quic::ListenerSettings New;
+
+            New.Timeout = Timeout;
+
+            return New;
+        }
     };
 
     // The listener works as an event dispatcher for events related to managing connections
@@ -64,22 +74,26 @@ namespace voxels::protocols::game {
         using ConnectionT = Connection<Server>;
 
     private:
+        // the underlying quic listener object
+        quic::Listener<Listener> QuicListener;
+
         // local endpoint of our Listener object, usually our machines ip address and a UDP port
         boost::asio::ip::udp::endpoint LocalEndpoint;
 
         // the connection objects managed by this Listener
-        std::vector<
-            std::shared_ptr<ConnectionT>
-        > Connections;
+        std::vector<std::shared_ptr<ConnectionT>> Connections;
     public:
-        explicit Listener(const boost::asio::ip::address& Address, const uint16_t Port = 13392) : LocalEndpoint(Address, Port) {};
+        explicit Listener(
+            const ListenerSettings& Settings,
+            const boost::asio::ip::address& Address,
+            const uint16_t Port = 13392
+        ) : QuicListener(this, Settings), LocalEndpoint(Address, Port) {};
+
         ~Listener() = default;
 
         // each different event gets a signal which manages multiple Callback functions for that event
         boost::signals2::signal<
             responses::NewConnection(const events::NewConnectionEvent&)
         > NewConnectionSignal;
-
-
     };
 }

@@ -66,7 +66,6 @@ namespace voxels::protocols::game {
 
     };
 
-
     template<LocalEndpointType EndpointT>
     class Connection;
 

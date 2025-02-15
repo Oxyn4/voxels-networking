@@ -40,6 +40,8 @@ namespace voxels::protocols::game::responses {
         explicit Identity(std::unique_ptr<IdentityDataT>& Data) : Reply(std::move(Data)) {}
     };
 
+    using ClientIdentity = Identity<Client>;
+
     template<>
     struct Identity<Server> : ControlStreamResponse, Reply<IdentityDataT, Server> {
         using Reply::operator*;
@@ -47,6 +49,8 @@ namespace voxels::protocols::game::responses {
 
         explicit Identity(std::unique_ptr<IdentityDataT>& Data) : Reply(std::move(Data)) {}
     };
+
+    using ServerIdentity = Identity<Server>;
 }
 
 namespace voxels::protocols::game::events {
@@ -87,6 +91,12 @@ namespace voxels::protocols::game::events {
         using Sent::operator*;
         using Sent::operator->;
     };
+
+    using ServerIdentitySent = IdentitySent<Server>;
+    using ServerIdentityReceived = IdentitySent<Server>;
+
+    using ClientIdentitySent = IdentitySent<Client>;
+    using ClientIdentityReceived = IdentityReceived<Client>;
 
 
 }

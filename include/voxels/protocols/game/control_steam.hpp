@@ -16,6 +16,13 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 #include <memory>
 
 namespace voxels::protocols::game {
+    struct Server;
+    struct Client;
+
+    template<typename EndpointType>
+    concept LocalEndpointType = std::is_same_v<EndpointType, Client> || std::is_same_v<EndpointType, Server>;
+
+    template<LocalEndpointType EndpointType = Client>
     class ControlSteam;
 }
 
@@ -28,12 +35,11 @@ namespace voxels::protocols::game::events {
 }
 
 namespace voxels::protocols::game {
+    template<LocalEndpointType EndpointType>
     class ControlStream {
     private:
 
-
     public:
-
 
     };
 }

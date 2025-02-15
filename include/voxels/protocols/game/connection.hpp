@@ -14,6 +14,7 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 #include "control_steam.hpp"
 
 namespace voxels::protocols::game {
+    template<LocalEndpointType EndpointType = Client>
     class Connection;
 }
 
@@ -24,30 +25,41 @@ namespace voxels::protocols::game::responses {
 }
 
 namespace voxels::protocols::game::events {
+    template<LocalEndpointType EndpointT = Client>
     class ConnectionEvent {
-    public:
-        std::weak_ptr<Connection> Connection_;
+        using ConnectionT = Connection<EndpointT>;
 
-        explicit ConnectionEvent(const std::weak_ptr<Connection>& Connection_)
+    public:
+        std::weak_ptr<ConnectionT> Connection_;
+
+        explicit ConnectionEvent(const std::weak_ptr<ConnectionT>& Connection_)
             : Connection_(Connection_) {};
     };
 
-    class ControlStreamInitiated final : public ConnectionEvent {
-    public:
-        std::weak_ptr<ControlSteam> ControlStream_;
+    template<LocalEndpointType EndpointT = Client>
+    class ControlStreamInitiated final : public ConnectionEvent<EndpointT> {
+        using ControlStreamT = ControlStream<EndpointT> ;
+        using ConnectionT = Connection<EndpointT>;
 
-        ControlStreamInitiated(const std::weak_ptr<Connection> &Connection_, const std::weak_ptr<ControlSteam> &ControlStream_)
-            : ConnectionEvent(Connection_), ControlStream_{ControlStream_} {};
+    public:
+        std::weak_ptr<ControlStreamT> ControlStream_;
+
+        ControlStreamInitiated(const std::weak_ptr<ConnectionT> &Connection_, const std::weak_ptr<ControlStreamT> &ControlStream_)
+            : ConnectionEvent<EndpointT>(Connection_), ControlStream_{ControlStream_} {};
     };
 }
 
 namespace voxels::protocols::game {
+    template<LocalEndpointType EndpointT>
     class Connection final {
+        using ControlStreamInitiatedT = events::ControlStreamInitiated<EndpointT>;
+
     private:
 
     public:
+        // the signals for events associated with a connection
         boost::signals2::signal<
-          responses::ControlStreamInitiated(const events::ControlStreamInitiated&)
+          responses::ControlStreamInitiated(const ControlStreamInitiatedT&)
         > ControlStreamInitiatedSignal;
 
     };

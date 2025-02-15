@@ -31,6 +31,8 @@ namespace voxels::protocols::game::responses {
 
 namespace voxels::protocols::game::events {
     class ListenerEvent {
+        using ConnectionT = Connection<Server> ;
+
     public:
         const std::weak_ptr<Listener> Listener_;
 
@@ -38,10 +40,12 @@ namespace voxels::protocols::game::events {
     };
 
     class NewConnectionEvent final : private ListenerEvent {
-    public:
-        const std::weak_ptr<Connection> Connection_;
+        using ConnectionT = Connection<Server> ;
 
-        NewConnectionEvent(const std::weak_ptr<Listener>& Listener_, const std::weak_ptr<Connection>& Connection) : ListenerEvent(Listener_), Connection_(Connection) {}
+    public:
+        const std::weak_ptr<ConnectionT> Connection_;
+
+        NewConnectionEvent(const std::weak_ptr<Listener>& Listener_, const std::weak_ptr<ConnectionT>& Connection) : ListenerEvent(Listener_), Connection_(Connection) {}
     };
 
 }
@@ -50,13 +54,15 @@ namespace voxels::protocols::game {
 
     // The listener works as an event dispatcher for events related to managing connections
     class Listener final {
+        using ConnectionT = Connection<Server>;
+
     private:
         // local endpoint of our Listener object, usually our machines ip address and a UDP port
         boost::asio::ip::udp::endpoint LocalEndpoint;
 
         // the connection objects managed by this Listener
         std::vector<
-            std::shared_ptr<Connection>
+            std::shared_ptr<ConnectionT>
         > Connections;
     public:
         explicit Listener(const boost::asio::ip::address& Address, const uint16_t Port) : LocalEndpoint(Address, Port) {};

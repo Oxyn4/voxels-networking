@@ -24,12 +24,20 @@ namespace voxels::protocols::game::responses {
 }
 
 namespace voxels::protocols::game::events {
-    class ConnectionStream {
+    class ConnectionEvent {
+    public:
         std::weak_ptr<Connection> Connection_;
+
+        explicit ConnectionEvent(const std::weak_ptr<Connection>& Connection_)
+            : Connection_(Connection_) {};
     };
 
-    class ControlStreamInitiated final : public ConnectionStream {
+    class ControlStreamInitiated final : public ConnectionEvent {
+    public:
         std::weak_ptr<ControlSteam> ControlStream_;
+
+        ControlStreamInitiated(const std::weak_ptr<Connection> &Connection_, const std::weak_ptr<ControlSteam> &ControlStream_)
+            : ConnectionEvent(Connection_), ControlStream_{ControlStream_} {};
     };
 }
 

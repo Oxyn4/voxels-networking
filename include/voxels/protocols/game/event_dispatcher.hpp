@@ -11,10 +11,18 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #pragma once
 
+
+#include <boost/hana.hpp>
+
 namespace voxels::protocols::game {
     class EventDispatcher {
     private:
 
     public:
+        consteval EventDispatcher() = default;
+        constexpr ~EventDispatcher() = default;
     };
+
+    template<class T, class... Args>
+    concept EventDispatcherConcept = std::is_base_of_v<EventDispatcher, T>;
 }

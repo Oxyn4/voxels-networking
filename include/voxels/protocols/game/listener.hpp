@@ -21,6 +21,8 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #include <memory>
 
+#include <boost/hana.hpp>
+
 namespace voxels::protocols::game {
     class Listener;
 }

@@ -52,8 +52,7 @@ namespace voxels::protocols::game::events {
 }
 
 namespace voxels::protocols::game {
-    template<LocalEndpointType EndpointT>
-    class Connection final : public EventDispatcher {
+    template<LocalEndpointType EndpointT> class Connection final : public EventDispatcher {
         using ControlStreamInitiatedEventT = events::ControlStreamInitiated<EndpointT>;
 
     private:

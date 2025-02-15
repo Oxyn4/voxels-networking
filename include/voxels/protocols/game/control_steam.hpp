@@ -84,7 +84,7 @@ namespace voxels::protocols::game::events {
 }
 
 namespace voxels::protocols::game {
-    template<LocalEndpointType EndpointType>
+    template<LocalEndpointType EndpointType = Client>
     class ControlStream;
 
     // specialisation for server
@@ -108,6 +108,7 @@ namespace voxels::protocols::game {
     };
 
     // specialisation for client
+
 
     template<>
     class ControlSteam<Client> : public Stream<Client> {

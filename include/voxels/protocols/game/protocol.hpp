@@ -12,3 +12,6 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 #pragma once
 
 #include "listener.hpp"
+#include "control_steam.hpp"
+#include "connection.hpp"
+

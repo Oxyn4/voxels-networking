@@ -66,7 +66,13 @@ public:
 };
 
 namespace voxels::protocols::game::quic {
-    struct ListenerSettings {
+    struct CredentialSettings final {};
+
+    struct Credentials final {
+        CredentialSettings Settings;
+    };
+
+    struct ListenerSettings final {
         std::chrono::milliseconds Timeout;
 
         ListenerSettings()
@@ -86,7 +92,9 @@ namespace voxels::protocols::game::quic {
     template<class ContextT>
     class Listener {
     private:
-        HQUIC Handle = nullptr;
+        HQUIC Handle;
+        HQUIC Configuration;
+        HQUIC Registration;
 
         QUIC_SETTINGS QuicSettings = {0};
 
@@ -94,6 +102,25 @@ namespace voxels::protocols::game::quic {
     public:
         // constructors
         explicit Listener(ContextT* ContextPointer_, const ListenerSettings& Settings) : QuicSettings(Settings), ContextPointer(ContextPointer_) {}
+
+        void Setup() const {
+            QUIC_BUFFER Alpn = {
+                sizeof("voxels") - 1,
+                reinterpret_cast<uint8_t*>("voxels")
+            };
+
+            uint Status = msquic::Get()->ConfigurationOpen(
+                Registration,
+                // used in application layer protocol negotiation
+                &Alpn,
+                // the amount of application layer protocol negotiation buffers
+                1,
+                &QuicSettings,
+                sizeof(QuicSettings),
+                nullptr,
+                &Configuration
+            );
+        }
 
         void Open() const {}
 

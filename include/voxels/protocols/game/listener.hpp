@@ -11,11 +11,61 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
+#include <boost/asio.hpp>
+
+#include <memory>
+
 namespace voxels::protocols::game {
-    class Listener {
-    private:
+    class Listener;
+
+    class Connection;
+}
+
+namespace voxels::protocols::game::responses {
+    class ListenerResponse {
+
+    };
+
+    class NewConnection : private ListenerResponse {
+
+    };
+}
+
+namespace voxels::protocols::game::events {
+    class ListenerEvent {
+        std::weak_ptr<Listener> Listener_;
 
     public:
+        explicit ListenerEvent(const std::weak_ptr<Listener> &Listener_) : Listener_(Listener_) {}
+    };
+
+    class NewConnectionEvent : private ListenerEvent {
+        std::weak_ptr<Connection> Connection_;
+
+    public:
+        NewConnectionEvent(const std::weak_ptr<Listener>& Listener_, const std::weak_ptr<Connection>& Connection) : ListenerEvent(Listener_), Connection_(Connection) {}
+    };
+
+}
+
+namespace voxels::protocols::game {
+
+    // The listener works as an event dispatcher for events related to managing connections
+    class Listener final {
+    private:
+        // local endpoint of our Listener object, usually our machines ip address and a UDP port
+        boost::asio::ip::udp::endpoint LocalEndpoint;
+
+
+    public:
+        Listener() = default;
+        ~Listener() = default;
+
+        // each different event gets a signal which manages multiple Callback functions for that event
+        boost::signals2::signal<responses::NewConnection(const events::NewConnectionEvent&)> NewConnectionSignal;
+
 
     };
 }

@@ -2,6 +2,21 @@
 
 Library implementations of various protocols I am designing for a game.
 
+# Compilation
+
+The library itself if header only, however relies on dependencies that are not.
+
+## Dependencies
+
+| Library        | Relevant link                                        | Use                                                                        |  
+|----------------|------------------------------------------------------|----------------------------------------------------------------------------|
+| Msquic         | [Github repo](https://github.com/microsoft/msquic)   | Provides all of the logic related to the quic layer of the protocol        |
+| Flatbuffers    | [Github repo](https://github.com/google/flatbuffers) | Provides all of the logic related to the flatbuffers layer of the protocol |
+| Boost asio     | [Github repo](https://github.com/boostorg/asio)      | Networking library, useful UDP related types.                              |
+| Boost log      | [Github repo](https://github.com/boostorg/log)       | Code observability, debugging, rich logging framework and infrastructure   | 
+| Boost Signals2 | [Github repo](https://github.com/boostorg/signals2)  | Writing thread-safe event driven code.                                     |
+| boost MSM      | [Github repo](https://github.com/boostorg/msm)       | Managing protocol state, transition events and protocol logic              |
+
 # License
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 

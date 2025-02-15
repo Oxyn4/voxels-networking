@@ -19,5 +19,18 @@ add_library(voxels_networking INTERFACE)
 
 target_include_directories(voxels_networking INTERFACE include/)
 
-target_link_libraries(voxels_networking INTERFACE Boost::log Boost::asio)
+target_link_libraries(voxels_networking INTERFACE Boost::log)
 target_link_libraries(voxels_networking INTERFACE msquic)
+
+
+add_executable(examples_server
+    examples/server.cpp
+)
+
+target_link_libraries(examples_server voxels_networking)
+
+add_executable(examples_client
+    examples/client.cpp
+)
+
+target_link_libraries(examples_client voxels_networking)

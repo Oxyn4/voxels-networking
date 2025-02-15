@@ -29,7 +29,7 @@ responses::NewConnection NewConnectionHandler(const events::NewConnectionEvent& 
 }
 
 int main() {
-    Listener Listener_(boost::asio::ip::make_address("127.0.0.1"), 13392);
+    Listener Listener_(boost::asio::ip::make_address("127.0.0.1"));
 
     Listener_.NewConnectionSignal.connect(NewConnectionHandler);
 

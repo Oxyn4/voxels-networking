@@ -53,6 +53,20 @@ namespace voxels::protocols::game::events {
 }
 
 namespace voxels::protocols::game {
+    template<LocalEndpointType EndpointType = Client>
+    class ConnectionSettings;
+
+    template<>
+    class ConnectionSettings<Client> {
+
+    };
+
+    template<>
+    class ConnectionSettings<Server> {
+
+    };
+
+
     template<LocalEndpointType EndpointT>
     class Connection;
 

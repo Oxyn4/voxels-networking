@@ -55,6 +55,9 @@ namespace voxels::protocols::game::events {
 }
 
 namespace voxels::protocols::game {
+    struct ListenerSettings {
+        std::chrono::milliseconds Timeout;
+    };
 
     // The listener works as an event dispatcher for events related to managing connections
     class Listener final : public EventDispatcher {

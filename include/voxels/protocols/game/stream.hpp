@@ -18,7 +18,7 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 #include <memory>
 
 namespace voxels::protocols::game {
-    template<LocalEndpointType EndpointT>
+    template<LocalEndpointType EndpointT = Client>
     class Stream;
 }
 

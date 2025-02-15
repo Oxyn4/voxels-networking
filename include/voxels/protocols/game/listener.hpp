@@ -69,7 +69,7 @@ namespace voxels::protocols::game {
             std::shared_ptr<ConnectionT>
         > Connections;
     public:
-        Listener(const boost::asio::ip::address& Address, const uint16_t Port = 13392) : LocalEndpoint(Address, Port) {};
+        explicit Listener(const boost::asio::ip::address& Address, const uint16_t Port = 13392) : LocalEndpoint(Address, Port) {};
         ~Listener() = default;
 
         // each different event gets a signal which manages multiple Callback functions for that event

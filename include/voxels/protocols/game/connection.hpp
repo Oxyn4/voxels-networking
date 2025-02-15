@@ -54,8 +54,11 @@ namespace voxels::protocols::game::events {
 
 namespace voxels::protocols::game {
     template<LocalEndpointType EndpointT>
-    class Connection final : public EventDispatcher {
-        using ControlStreamInitiatedEventT = events::ControlStreamInitiated<EndpointT>;
+    class Connection;
+
+    template<>
+    class Connection<Server> final : public EventDispatcher {
+        using ControlStreamInitiatedEventT = events::ControlStreamInitiated<Server>;
 
     public:
         boost::asio::ip::udp::endpoint RemoteEndpoint;
@@ -64,6 +67,18 @@ namespace voxels::protocols::game {
         boost::signals2::signal<
           responses::ControlStreamInitiated(const ControlStreamInitiatedEventT&)
         > ControlStreamInitiatedSignal;
+    };
 
+    template<>
+    class Connection<Client> final : public EventDispatcher {
+        using ControlStreamInitiatedEventT = events::ControlStreamInitiated<Client>;
+
+    public:
+        boost::asio::ip::udp::endpoint RemoteEndpoint;
+
+        // the signals for events associated with a connection
+        boost::signals2::signal<
+          responses::ControlStreamInitiated(const ControlStreamInitiatedEventT&)
+        > ControlStreamInitiatedSignal;
     };
 }

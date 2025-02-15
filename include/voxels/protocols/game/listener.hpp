@@ -11,6 +11,8 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #pragma once
 
+#include "connection.hpp"
+
 #include <boost/signals2.hpp>
 
 #include <boost/asio.hpp>
@@ -19,32 +21,26 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 namespace voxels::protocols::game {
     class Listener;
-
-    class Connection;
 }
 
 namespace voxels::protocols::game::responses {
-    class ListenerResponse {
+    class ListenerResponse {};
 
-    };
-
-    class NewConnection : private ListenerResponse {
-
-    };
+    class NewConnection final : private ListenerResponse {};
 }
 
 namespace voxels::protocols::game::events {
     class ListenerEvent {
-        std::weak_ptr<Listener> Listener_;
-
     public:
+        const std::weak_ptr<Listener> Listener_;
+
         explicit ListenerEvent(const std::weak_ptr<Listener> &Listener_) : Listener_(Listener_) {}
     };
 
-    class NewConnectionEvent : private ListenerEvent {
-        std::weak_ptr<Connection> Connection_;
-
+    class NewConnectionEvent final : private ListenerEvent {
     public:
+        const std::weak_ptr<Connection> Connection_;
+
         NewConnectionEvent(const std::weak_ptr<Listener>& Listener_, const std::weak_ptr<Connection>& Connection) : ListenerEvent(Listener_), Connection_(Connection) {}
     };
 
@@ -58,13 +54,18 @@ namespace voxels::protocols::game {
         // local endpoint of our Listener object, usually our machines ip address and a UDP port
         boost::asio::ip::udp::endpoint LocalEndpoint;
 
-
+        // the connection objects managed by this Listener
+        std::vector<
+            std::shared_ptr<Connection>
+        > Connections;
     public:
-        Listener() = default;
+        explicit Listener(const boost::asio::ip::address& Address, const uint16_t Port) : LocalEndpoint(Address, Port) {};
         ~Listener() = default;
 
         // each different event gets a signal which manages multiple Callback functions for that event
-        boost::signals2::signal<responses::NewConnection(const events::NewConnectionEvent&)> NewConnectionSignal;
+        boost::signals2::signal<
+            responses::NewConnection(const events::NewConnectionEvent&)
+        > NewConnectionSignal;
 
 
     };

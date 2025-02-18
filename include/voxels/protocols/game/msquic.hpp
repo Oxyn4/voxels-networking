@@ -21,28 +21,28 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 #include "listener.hpp"
 
 // singleton class that manages a unique ptr to msquic API table
-class msquic {
+class Msquic {
 private:
   std::unique_ptr<const QUIC_API_TABLE> API;
 
-  msquic() {
+  Msquic() {
     const QUIC_API_TABLE* RawAPI = nullptr;
 
     uint Status = MsQuicOpen2(&RawAPI);
 
     API = std::make_unique<const QUIC_API_TABLE>(*RawAPI);
   };
-  msquic(const msquic&);
-  msquic& operator=(const msquic&);
-  ~msquic() = default;
+  Msquic(const Msquic&);
+  Msquic& operator=(const Msquic&);
+  ~Msquic() = default;
 
 public:
 
-  msquic(msquic&) = delete;
-  void operator=(msquic&) = delete;
+  Msquic(Msquic&) = delete;
+  void operator=(Msquic&) = delete;
 
-  static msquic& Get() {
-    static msquic Instance;
+  static Msquic& Get() {
+    static Msquic Instance;
 
     return Instance;
   };
@@ -65,7 +65,7 @@ public:
   }
 };
 
-namespace voxels::protocols::game::quic {
+namespace voxels::protocols::game::msquic {
     struct CredentialSettings final {};
 
     struct Credentials final {
@@ -109,7 +109,7 @@ namespace voxels::protocols::game::quic {
                 reinterpret_cast<uint8_t*>("voxels")
             };
 
-            uint Status = msquic::Get()->ConfigurationOpen(
+            uint Status = Msquic::Get()->ConfigurationOpen(
                 Registration,
                 // used in application layer protocol negotiation
                 &Alpn,

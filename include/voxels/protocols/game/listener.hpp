@@ -60,8 +60,8 @@ namespace voxels::protocols::game {
 
         ListenerSettings() : Timeout(std::chrono::milliseconds(5000)) {}
 
-        operator quic::ListenerSettings () const {
-            quic::ListenerSettings New;
+        operator msquic::ListenerSettings () const {
+            msquic::ListenerSettings New;
 
             New.Timeout = Timeout;
 
@@ -75,7 +75,7 @@ namespace voxels::protocols::game {
 
     private:
         // the underlying quic listener object
-        quic::Listener<Listener> QuicListener;
+        msquic::Listener<Listener> QuicListener;
 
         // local endpoint of our Listener object, usually our machines ip address and a UDP port
         boost::asio::ip::udp::endpoint LocalEndpoint;

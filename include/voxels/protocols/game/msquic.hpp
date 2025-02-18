@@ -87,18 +87,16 @@ namespace voxels::protocols::game::msquic {
     };
 
     template<class EventDispatcherT>
-    class Listener {
+    class Listener final : quic::Listener<EventDispatcherT> {
     private:
         HQUIC Handle;
         HQUIC Configuration;
         HQUIC Registration;
 
         QUIC_SETTINGS QuicSettings = {0};
-
-        EventDispatcherT* ContextPointer;
     public:
         // constructors
-        explicit Listener(EventDispatcherT* ContextPointer_, const ListenerSettings& Settings) : QuicSettings(Settings), ContextPointer(ContextPointer_) {}
+        explicit Listener(EventDispatcherT* ContextPointer_, const ListenerSettings& Settings) : quic::Listener<EventDispatcherT>(ContextPointer_), QuicSettings(Settings) {}
 
         void Setup() const {
             QUIC_BUFFER Alpn = {

@@ -36,7 +36,7 @@ namespace voxels::protocols::game::quic {
         virtual ~Connection() = default;
     };
 
-    template<class DispatcherT, LocalEndpointType EndpointType = Client>
+    template<class DispatcherT>
     class Listener {
     protected:
         DispatcherT* Dispatcher;

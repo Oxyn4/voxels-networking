@@ -13,36 +13,67 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #include "endpoint.hpp"
 
+#include "listener_dispatcher.hpp"
+
+#include "event_dispatcher.hpp"
+
 namespace voxels::protocols::game::quic {
-    template<class DispatcherT, LocalEndpointType EndpointType = Client>
-    class Stream {
+    template<LocalEndpointType EndpointType = Client>
+    class Stream;
+
+    template<>
+    class Stream<Client> {
     protected:
-        DispatcherT* Dispatcher;
+        StreamEventDispatcher* Dispatcher;
 
     public:
-        explicit Stream(DispatcherT* dispatcher) : Dispatcher(dispatcher) {}
+        explicit Stream(StreamEventDispatcher* dispatcher) : Dispatcher(dispatcher) {}
 
         virtual ~Stream() = default;
     };
 
-    template<class DispatcherT, LocalEndpointType EndpointType = Client>
-    class Connection {
+    template<>
+    class Stream<Server> {
     protected:
-        DispatcherT* Dispatcher;
+        StreamEventDispatcher* Dispatcher;
 
     public:
-        explicit Connection(DispatcherT* dispatcher) : Dispatcher(dispatcher) {}
+        explicit Stream(StreamEventDispatcher* dispatcher) : Dispatcher(dispatcher) {}
+
+        virtual ~Stream() = default;
+    };
+
+    template<LocalEndpointType EndpointType = Client>
+    class Connection;
+
+    template<>
+    class Connection<Server> {
+    protected:
+        ConnectionEventDispatcher* Dispatcher;
+
+    public:
+        explicit Connection(ConnectionEventDispatcher* dispatcher) : Dispatcher(dispatcher) {}
 
         virtual ~Connection() = default;
     };
 
-    template<class DispatcherT>
-    class Listener {
+    template<>
+    class Connection<Client> {
     protected:
-        DispatcherT* Dispatcher;
+        ConnectionEventDispatcher* Dispatcher;
 
     public:
-        explicit Listener(DispatcherT* dispatcher) : Dispatcher(dispatcher) {}
+        explicit Connection(ConnectionEventDispatcher* dispatcher) : Dispatcher(dispatcher) {}
+
+        virtual ~Connection() = default;
+    };
+
+    class Listener {
+    protected:
+        ListenerEventDispatcher* Dispatcher;
+
+    public:
+        explicit Listener(ListenerEventDispatcher* dispatcher) : Dispatcher(dispatcher) {}
 
         virtual ~Listener() = default;
     };

@@ -33,7 +33,7 @@ int main() {
 
     Listener Listener_(Settings, boost::asio::ip::make_address("127.0.0.1"));
 
-    Listener_.NewConnectionSignal.connect(NewConnectionHandler);
+    Listener_.Callbacks.NewConnection.connect(NewConnectionHandler);
 
     return 0;
 }

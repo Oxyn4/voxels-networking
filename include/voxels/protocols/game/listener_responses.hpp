@@ -1,3 +1,4 @@
+
 /*
 This file is part of the Voxels networking library.
 
@@ -11,24 +12,8 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #pragma once
 
-namespace voxels::protocols::game {
-    class EventDispatcher {
-    private:
+namespace voxels::protocols::game::responses {
+    class ListenerResponse {};
 
-    public:
-        EventDispatcher() = default;
-        virtual ~EventDispatcher() = default;
-    };
-
-    class ConnectionEventDispatcher : public EventDispatcher {
-    public:
-        consteval ConnectionEventDispatcher() = default;
-        constexpr ~ConnectionEventDispatcher() = default;
-    };
-
-    class StreamEventDispatcher : public EventDispatcher {
-    public:
-        consteval StreamEventDispatcher() = default;
-        constexpr ~StreamEventDispatcher() = default;
-    };
+    class NewConnection final : private ListenerResponse {};
 }

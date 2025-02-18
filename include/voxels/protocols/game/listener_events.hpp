@@ -11,24 +11,31 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #pragma once
 
+#include "endpoint.hpp"
+
+#include "connection.hpp"
+
 namespace voxels::protocols::game {
-    class EventDispatcher {
-    private:
+    class Listener;
+}
+
+namespace voxels::protocols::game::events {
+    class ListenerEvent {
+        using ConnectionT = Connection<Server>;
 
     public:
-        EventDispatcher() = default;
-        virtual ~EventDispatcher() = default;
+        std::weak_ptr<Listener> Listener_;
+
+        explicit ListenerEvent(const std::weak_ptr<Listener> &Listener_) : Listener_(Listener_) {}
     };
 
-    class ConnectionEventDispatcher : public EventDispatcher {
+    class NewConnectionEvent final : private ListenerEvent {
+        using ConnectionT = Connection<Server> ;
+
     public:
-        consteval ConnectionEventDispatcher() = default;
-        constexpr ~ConnectionEventDispatcher() = default;
+        std::weak_ptr<ConnectionT> Connection_;
+
+        NewConnectionEvent(const std::weak_ptr<Listener>& Listener_, const std::weak_ptr<ConnectionT>& Connection) : ListenerEvent(Listener_), Connection_(Connection) {}
     };
 
-    class StreamEventDispatcher : public EventDispatcher {
-    public:
-        consteval StreamEventDispatcher() = default;
-        constexpr ~StreamEventDispatcher() = default;
-    };
 }

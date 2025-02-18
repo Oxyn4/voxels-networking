@@ -13,44 +13,7 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #include <boost/asio.hpp>
 
-#include "control_steam.hpp"
-
-namespace voxels::protocols::game {
-    template<LocalEndpointType EndpointType = Client>
-    class Connection;
-}
-
-namespace voxels::protocols::game::responses {
-    struct ControlStreamResponse;
-
-    class ControlStreamInitiated final : public ControlStreamResponse {
-
-    };
-}
-
-namespace voxels::protocols::game::events {
-    template<LocalEndpointType EndpointT = Client>
-    class ConnectionEvent {
-        using ConnectionT = Connection<EndpointT>;
-
-    public:
-        std::weak_ptr<ConnectionT> Connection_;
-
-        explicit ConnectionEvent(const std::weak_ptr<ConnectionT>& Connection_) : Connection_(Connection_) {};
-    };
-
-    template<LocalEndpointType EndpointT = Client>
-    class ControlStreamInitiated final : public ConnectionEvent<EndpointT> {
-        using ControlStreamT = ControlStream<EndpointT> ;
-        using ConnectionT = Connection<EndpointT>;
-
-    public:
-        std::weak_ptr<ControlStreamT> ControlStream_;
-
-        ControlStreamInitiated(const std::weak_ptr<ConnectionT> &Connection_, const std::weak_ptr<ControlStreamT> &ControlStream_)
-            : ConnectionEvent<EndpointT>(Connection_), ControlStream_{ControlStream_} {};
-    };
-}
+#include "connection_dispatcher.hpp"
 
 namespace voxels::protocols::game {
     template<LocalEndpointType EndpointType = Client>
@@ -76,22 +39,16 @@ namespace voxels::protocols::game {
     public:
         boost::asio::ip::udp::endpoint RemoteEndpoint;
 
-        // the signals for events associated with a connection
-        boost::signals2::signal<
-          responses::ControlStreamInitiated(const ControlStreamInitiatedEventT&)
-        > ControlStreamInitiatedSignal;
+        DefaultConnectionEventDispatcher<Server> Callbacks;
+
     };
 
     template<>
     class Connection<Client> final : public EventDispatcher {
-        using ControlStreamInitiatedEventT = events::ControlStreamInitiated<Client>;
-
     public:
         boost::asio::ip::udp::endpoint RemoteEndpoint;
 
-        // the signals for events associated with a connection
-        boost::signals2::signal<
-          responses::ControlStreamInitiated(const ControlStreamInitiatedEventT&)
-        > ControlStreamInitiatedSignal;
+        DefaultConnectionEventDispatcher<Client> Callbacks;
+
     };
 }

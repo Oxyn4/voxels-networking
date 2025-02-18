@@ -11,18 +11,9 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #pragma once
 
-namespace voxels::protocols::game {
-    class EventDispatcher {
-    private:
 
-    public:
-        EventDispatcher() = default;
-        virtual ~EventDispatcher() = default;
-    };
+namespace voxels::protocols::game::responses {
+    struct ControlStreamResponse;
 
-    class StreamEventDispatcher : public EventDispatcher {
-    public:
-        consteval StreamEventDispatcher() = default;
-        constexpr ~StreamEventDispatcher() = default;
-    };
+    class ControlStreamInitiated final : public ControlStreamResponse {};
 }

@@ -49,10 +49,10 @@ namespace voxels::protocols::game::quic {
     template<>
     class Connection<Server> {
     protected:
-        ConnectionEventDispatcher* Dispatcher;
+        ConnectionEventDispatcher<Server>* Dispatcher;
 
     public:
-        explicit Connection(ConnectionEventDispatcher* dispatcher) : Dispatcher(dispatcher) {}
+        explicit Connection(ConnectionEventDispatcher<Server>* dispatcher) : Dispatcher(dispatcher) {}
 
         virtual ~Connection() = default;
     };
@@ -60,10 +60,10 @@ namespace voxels::protocols::game::quic {
     template<>
     class Connection<Client> {
     protected:
-        ConnectionEventDispatcher* Dispatcher;
+        ConnectionEventDispatcher<Client>* Dispatcher;
 
     public:
-        explicit Connection(ConnectionEventDispatcher* dispatcher) : Dispatcher(dispatcher) {}
+        explicit Connection(ConnectionEventDispatcher<Client>* dispatcher) : Dispatcher(dispatcher) {}
 
         virtual ~Connection() = default;
     };

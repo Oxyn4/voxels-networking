@@ -23,7 +23,7 @@ responses::ControlStreamInitiated ControlStreamInitiatedHandler(const events::Co
 responses::NewConnection NewConnectionHandler(const events::NewConnectionEvent& Event) {
     const std::shared_ptr<Connection<Server>> Connection_ = Event.Connection_.lock();
 
-    Connection_->ControlStreamInitiatedSignal.connect(ControlStreamInitiatedHandler);
+    Connection_->Callbacks.ControlStreamInitiated.connect(ControlStreamInitiatedHandler);
 
     return {};
 }

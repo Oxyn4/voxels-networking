@@ -1,0 +1,4 @@
+include "handshake.fbs";
+
+namespace voxels.protocol.game.raw;
+

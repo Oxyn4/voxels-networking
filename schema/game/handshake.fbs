@@ -1,0 +1,3 @@
+include "identity.fbs";
+
+namespace voxels.protocol.game.raw.handshake;

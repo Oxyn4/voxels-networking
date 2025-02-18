@@ -18,18 +18,33 @@ namespace voxels::protocols::game::quic {
     class Stream {
     protected:
         DispatcherT* Dispatcher;
+
+    public:
+        explicit Stream(DispatcherT* dispatcher) : Dispatcher(dispatcher) {}
+
+        virtual ~Stream() = default;
     };
 
     template<class DispatcherT, LocalEndpointType EndpointType = Client>
     class Connection {
     protected:
         DispatcherT* Dispatcher;
+
+    public:
+        explicit Connection(DispatcherT* dispatcher) : Dispatcher(dispatcher) {}
+
+        virtual ~Connection() = default;
     };
 
     template<class DispatcherT, LocalEndpointType EndpointType = Client>
     class Listener {
     protected:
         DispatcherT* Dispatcher;
+
+    public:
+        explicit Listener(DispatcherT* dispatcher) : Dispatcher(dispatcher) {}
+
+        virtual ~Listener() = default;
     };
 
 }

@@ -15,12 +15,21 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 namespace voxels::protocols::game::quic {
     template<class DispatcherT, LocalEndpointType EndpointType = Client>
-    class Stream;
+    class Stream {
+    protected:
+        DispatcherT* Dispatcher;
+    };
 
     template<class DispatcherT, LocalEndpointType EndpointType = Client>
-    class Connection;
+    class Connection {
+    protected:
+        DispatcherT* Dispatcher;
+    };
 
     template<class DispatcherT, LocalEndpointType EndpointType = Client>
-    class Listener;
+    class Listener {
+    protected:
+        DispatcherT* Dispatcher;
+    };
 
 }

@@ -13,38 +13,33 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #include "endpoint.hpp"
 
-#include "response.hpp"
-
-namespace voxels::protocols::game {
- template<class RootMessageT, LocalEndpointType EndpointT>
- class Stream;
-}
+#include "stream_responses.hpp"
 
 namespace voxels::protocols::game::responses {
+ struct ControlStreamResponse {};
+
  template<LocalEndpointType EndpointT = Client>
- class StreamResponse : public Response<EndpointT> {};
+ struct Identity {};
 
- template<class ReplyT, LocalEndpointType EndpointType = Client>
- class Reply : public StreamResponse<EndpointType> {
- public:
-  std::unique_ptr<ReplyT> Data;
+ using IdentityDataT = int;
 
-  const ReplyT& operator*() const {
-   return *Data;
-  }
+ template<>
+ struct Identity<Client> : ControlStreamResponse, Reply<IdentityDataT> {
+  using Reply::operator*;
+  using Reply::operator->;
 
-  const ReplyT* operator->() const {
-   return Data.get();
-  }
-
-  const ReplyT& operator*() {
-   return *Data;
-  }
-
-  const ReplyT* operator->() {
-   return Data.get();
-  }
-
-  explicit Reply(std::unique_ptr<ReplyT>&& Data) : Data(std::move(Data)) {}
+  explicit Identity(std::unique_ptr<IdentityDataT>& Data) : Reply(std::move(Data)) {}
  };
+
+ using ClientIdentity = Identity<Client>;
+
+ template<>
+ struct Identity<Server> : ControlStreamResponse, Reply<IdentityDataT, Server> {
+  using Reply::operator*;
+  using Reply::operator->;
+
+  explicit Identity(std::unique_ptr<IdentityDataT>& Data) : Reply(std::move(Data)) {}
+ };
+
+ using ServerIdentity = Identity<Server>;
 }

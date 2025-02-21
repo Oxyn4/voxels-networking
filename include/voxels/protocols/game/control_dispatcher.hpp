@@ -11,40 +11,17 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #pragma once
 
+#include "stream_dispatcher.hpp"
+
 #include "endpoint.hpp"
 
-#include "response.hpp"
-
 namespace voxels::protocols::game {
- template<class RootMessageT, LocalEndpointType EndpointT>
- class Stream;
-}
+    template<class RootMessageT, LocalEndpointType EndpointT = Client>
+    class ControlStreamDispatcher;
 
-namespace voxels::protocols::game::responses {
- template<LocalEndpointType EndpointT = Client>
- class StreamResponse : public Response<EndpointT> {};
+    template<class RootMessageT>
+    class ControlStreamDispatcher<RootMessageT, Client> {};
 
- template<class ReplyT, LocalEndpointType EndpointType = Client>
- class Reply : public StreamResponse<EndpointType> {
- public:
-  std::unique_ptr<ReplyT> Data;
-
-  const ReplyT& operator*() const {
-   return *Data;
-  }
-
-  const ReplyT* operator->() const {
-   return Data.get();
-  }
-
-  const ReplyT& operator*() {
-   return *Data;
-  }
-
-  const ReplyT* operator->() {
-   return Data.get();
-  }
-
-  explicit Reply(std::unique_ptr<ReplyT>&& Data) : Data(std::move(Data)) {}
- };
+    template<class RootMessageT>
+    class ControlStreamDispatcher<RootMessageT, Server> {};
 }

@@ -12,93 +12,14 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 #pragma once
 
 
+#include "control_stream_events.hpp"
+#include "control_stream_responses.hpp"
+
 #include <boost/signals2.hpp>
 
-#include "stream_events.hpp"
+#include "stream.hpp"
 
 #include <voxels/protocols/game/schema/protocol_raw_types.hpp>
-
-namespace voxels::protocols::game {
-    template<LocalEndpointType EndpointType = Client>
-    class ControlStream;
-}
-
-namespace voxels::protocols::game::responses {
-    struct ControlStreamResponse {};
-
-    template<LocalEndpointType EndpointT = Client>
-    struct Identity {};
-
-    using IdentityDataT = int;
-
-    template<>
-    struct Identity<Client> : ControlStreamResponse, Reply<IdentityDataT> {
-        using Reply::operator*;
-        using Reply::operator->;
-
-        explicit Identity(std::unique_ptr<IdentityDataT>& Data) : Reply(std::move(Data)) {}
-    };
-
-    using ClientIdentity = Identity<Client>;
-
-    template<>
-    struct Identity<Server> : ControlStreamResponse, Reply<IdentityDataT, Server> {
-        using Reply::operator*;
-        using Reply::operator->;
-
-        explicit Identity(std::unique_ptr<IdentityDataT>& Data) : Reply(std::move(Data)) {}
-    };
-
-    using ServerIdentity = Identity<Server>;
-}
-
-namespace voxels::protocols::game::events {
-    template<LocalEndpointType EndpointT = Client>
-    struct ControlStreamEvent {
-        using ControlStreamT = ControlStream<EndpointT>;
-
-        std::weak_ptr<ControlStreamT> ControlStream_;
-    };
-
-    template<LocalEndpointType EndpointT = Client>
-    struct IdentityReceived;
-
-    template<>
-    struct IdentityReceived<Client> : ControlStreamEvent<Client>, Received<int, Client> {
-        using Received::operator*;
-        using Received::operator->;
-    };
-
-    template<>
-    struct IdentityReceived<Server> : ControlStreamEvent<Server>, Received<std::string, Server> {
-        using Received::operator*;
-        using Received::operator->;
-    };
-
-
-    template<LocalEndpointType EndpointT = Client>
-    struct IdentitySent;
-
-    template<>
-    struct IdentitySent<Client> : ControlStreamEvent<Client>, Sent<int, Client> {
-        using Sent::operator*;
-        using Sent::operator->;
-    };
-
-    template<>
-    struct IdentitySent<Server> : ControlStreamEvent<Server>, Sent<std::string, Server> {
-        using Sent::operator*;
-        using Sent::operator->;
-    };
-
-    using ServerIdentitySent = IdentitySent<Server>;
-    using ServerIdentityReceived = IdentitySent<Server>;
-
-    using ClientIdentitySent = IdentitySent<Client>;
-    using ClientIdentityReceived = IdentityReceived<Client>;
-
-
-}
 
 namespace voxels::protocols::game {
     template<LocalEndpointType EndpointType>

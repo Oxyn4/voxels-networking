@@ -18,10 +18,10 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #include "endpoint.hpp"
 
+#include "stream_dispatcher.hpp"
 #include "listener_dispatcher.hpp"
 
 #include "event_dispatcher.hpp"
-
 
 /**
  * @namespace voxels::protocols::game::quic

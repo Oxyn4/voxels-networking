@@ -1,0 +1,12 @@
+
+table Version {
+    major: int;
+    minor: int;
+    patch: int;
+    pre_release: string;
+    build_metadata: string;
+}
+
+table License {
+    identifier: string (required);
+}

@@ -1,2 +1,47 @@
 
+include "common_types.fbs";
+
+namespace voxels.protocol.game.raw.handshake.identity.server;
+
+table Identity {
+    identifier: string (required);
+    server_version: Version (required);
+    license: License;
+    homepage: string;
+}
+
+union Content {
+    Identity
+}
+
+table Message {
+    content: Content;
+}
+
+namespace voxels.protocol.game.raw.handshake.identity.client;
+
+table Identity {
+    identifier: string (required);
+    client_version: Version (required);
+    license: License;
+    homepage: string;
+}
+
+union Content {
+    Identity
+}
+
+table Message {
+    content: Content;
+}
+
 namespace voxels.protocol.game.raw.handshake.identity;
+
+union MessageContent {
+    server.Message,
+    client.Message
+}
+
+table Message {
+    content: MessageContent;
+}

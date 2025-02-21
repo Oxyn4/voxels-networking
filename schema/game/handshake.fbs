@@ -1,3 +1,11 @@
 include "identity.fbs";
 
 namespace voxels.protocol.game.raw.handshake;
+
+union MessageContent {
+    identity.Message,
+}
+
+table Message {
+    content: MessageContent;
+}

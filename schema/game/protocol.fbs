@@ -1,3 +1,13 @@
 include "handshake.fbs";
 
 namespace voxels.protocol.game.raw;
+
+union MessageContent {
+    handshake.Message,
+}
+
+table Message {
+    content: MessageContent;
+}
+
+root_type Message;

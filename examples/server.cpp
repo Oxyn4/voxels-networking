@@ -15,7 +15,7 @@ responses::ServerIdentity IdentityReceivedHandler(const events::ClientIdentityRe
 responses::ControlStreamInitiated ControlStreamInitiatedHandler(const events::ControlStreamInitiated<Server>& Event) {
     const std::shared_ptr<ControlStream<Server>> ControlStream = Event.ControlStream_.lock();
 
-    ControlStream->IdentityReceivedSignal.connect(IdentityReceivedHandler);
+    ControlStream->Callbacks.IdentityReceivedSignal.connect(IdentityReceivedHandler);
 
     return {};
 }

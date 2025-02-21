@@ -1,7 +1,7 @@
 
 include "common_types.fbs";
 
-namespace voxels.protocol.game.raw.handshake.identity.server;
+namespace voxels.protocols.game.raw.control_stream.handshake.identity.server;
 
 table Identity {
     identifier: string (required);
@@ -18,7 +18,7 @@ table Message {
     content: Content;
 }
 
-namespace voxels.protocol.game.raw.handshake.identity.client;
+namespace voxels.protocols.game.raw.control_stream.handshake.identity.client;
 
 table Identity {
     identifier: string (required);
@@ -35,7 +35,7 @@ table Message {
     content: Content;
 }
 
-namespace voxels.protocol.game.raw.handshake.identity;
+namespace voxels.protocols.game.raw.control_stream.handshake.identity;
 
 union MessageContent {
     server.Message,

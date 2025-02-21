@@ -67,7 +67,7 @@ add_custom_target(flatbuffers_compilation_game
         # it will be outputted to our output directory
         -o ${FLATBUFFERS_GAME_OUT}
         # the root source file contains includes for other protocol buffer files
-        ${FLATBUFFERS_GAME_SOURCE}/protocol.fbs
+        ${FLATBUFFERS_GAME_SOURCE}/control_stream.fbs
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 

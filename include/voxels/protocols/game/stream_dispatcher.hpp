@@ -23,11 +23,9 @@ namespace voxels::protocols::game {
         virtual ~StreamEventDispatcher() = default;
 
         virtual std::optional< responses::Reply< RootMessageT, EndpointT > > operator () (const events::Received<RootMessageT, EndpointT>& Event) {
-            return nullptr;
+            return {};
         }
 
-        virtual void operator () (const events::Sent<RootMessageT, EndpointT>& Event) {
-            return;
-        }
+        virtual void operator () (const events::Sent<RootMessageT, EndpointT>& Event) {}
     };
 }

@@ -1,6 +1,6 @@
 include "identity.fbs";
 
-namespace voxels.protocol.game.raw.handshake;
+namespace voxels.protocols.game.raw.control_stream.handshake;
 
 union MessageContent {
     identity.Message,

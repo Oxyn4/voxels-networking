@@ -1,6 +1,6 @@
 include "handshake.fbs";
 
-namespace voxels.protocol.game.raw;
+namespace voxels.protocols.game.raw.control_stream;
 
 union MessageContent {
     handshake.Message,

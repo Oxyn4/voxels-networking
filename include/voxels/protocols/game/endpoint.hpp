@@ -9,12 +9,30 @@ See the GNU General Public License for more details. You should have received a 
 License along with the voxels networking library. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file endpoint.hpp
+ * @brief Contains the definition of the LocalEndpointType concept
+ */
+
 #pragma once
 
 namespace voxels::protocols::game {
+    /**
+     * @class Server endpoint.hpp
+     * @brief A tag type used as a template parameter to many of the library types to indicate usage of a specialised overload meant for voxels server endpoints.
+     */
     struct Server;
+
+    /**
+     * @class Client endpoint.hpp
+     * @brief A tag type used as a template parameter to many of the library types to indicate usage of a specialised overload meant for voxels client endpoints.
+     */
     struct Client;
 
+    /**
+     * @concept LocalEndpointType
+     * @brief A concept used to check a type is either Server or Client, allowing for specialised overloaded based on a template parameter constrained by this concept.
+     */
     template<typename EndpointType>
     concept LocalEndpointType = std::is_same_v<EndpointType, Client> || std::is_same_v<EndpointType, Server>;
 }

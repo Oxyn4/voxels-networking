@@ -9,6 +9,11 @@ See the GNU General Public License for more details. You should have received a 
 License along with the voxels networking library. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file quic.hpp
+ * @brief Contains interface definitions for writing custom QUIC layers compatible with the voxels protocol layer.
+ */
+
 #pragma once
 
 #include "endpoint.hpp"
@@ -17,28 +22,41 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #include "event_dispatcher.hpp"
 
+
+/**
+ * @namespace voxels::protocols::game::quic
+ * @brief Contains interfaces that allows for implementing custom QUIC compatible layers
+ * @details The voxels layer of the protocol relies on a common interface provided by the lower level quic layer. This namespace contains classes that make writing a quic layer compatible with the voxels layer simpler.
+ */
 namespace voxels::protocols::game::quic {
-    template<LocalEndpointType EndpointType = Client>
+    /**
+     * @class Stream quic.hpp Quic stream interface
+     * @brief Interface representing a QUIC stream
+     * @tparam EndpointType The Endpoint type either server and client
+     */
+    template<class RootMessageT, LocalEndpointType EndpointType = Client>
     class Stream;
 
-    template<>
-    class Stream<Client> {
+    template<class RootMessageT>
+    class Stream<RootMessageT, Client> {
+        using StreamEventDispatcherT = EventDispatcher;
     protected:
-        StreamEventDispatcher* Dispatcher;
+        StreamEventDispatcherT* Dispatcher;
 
     public:
-        explicit Stream(StreamEventDispatcher* dispatcher) : Dispatcher(dispatcher) {}
+        explicit Stream(StreamEventDispatcherT* dispatcher) : Dispatcher(dispatcher) {}
 
         virtual ~Stream() = default;
     };
 
-    template<>
-    class Stream<Server> {
+    template<class RootMessageT>
+    class Stream<RootMessageT, Server> {
+        using StreamEventDispatcherT = StreamEventDispatcher<RootMessageT>;
     protected:
-        StreamEventDispatcher* Dispatcher;
+        StreamEventDispatcherT* Dispatcher;
 
     public:
-        explicit Stream(StreamEventDispatcher* dispatcher) : Dispatcher(dispatcher) {}
+        explicit Stream(StreamEventDispatcherT* dispatcher) : Dispatcher(dispatcher) {}
 
         virtual ~Stream() = default;
     };

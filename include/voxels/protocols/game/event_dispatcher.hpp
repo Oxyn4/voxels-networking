@@ -19,10 +19,4 @@ namespace voxels::protocols::game {
         EventDispatcher() = default;
         virtual ~EventDispatcher() = default;
     };
-
-    class StreamEventDispatcher : public EventDispatcher {
-    public:
-        consteval StreamEventDispatcher() = default;
-        constexpr ~StreamEventDispatcher() = default;
-    };
 }

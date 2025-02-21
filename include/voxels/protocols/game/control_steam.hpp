@@ -14,10 +14,9 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #include <boost/signals2.hpp>
 
-#include "stream.hpp"
+#include "stream_events.hpp"
 
-#include <memory>
-
+#include <voxels/protocols/game/schema/protocol_raw_types.hpp>
 
 namespace voxels::protocols::game {
     template<LocalEndpointType EndpointType = Client>

@@ -11,6 +11,20 @@ project(
         HOMEPAGE_URL "https://www.github.com/Oxyn4/voxels-networking"
 )
 
+find_package(Doxygen)
+
+if (DOXYGEN_FOUND)
+    message(STATUS "Found doxygen")
+    add_custom_target(docs ALL
+            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
+            COMMENT "Generating API documentation with Doxygen"
+            VERBATIM
+    )
+else()
+    message(STATUS "Unable to find Doxygen")
+endif ()
+
 # find boost dependencies
 # allows us to use them in our project
 find_package(Boost CONFIG REQUIRED COMPONENTS
@@ -18,8 +32,19 @@ find_package(Boost CONFIG REQUIRED COMPONENTS
 )
 
 # compilation options used by our custom target
-set(FLATBUFFERS_GAME_OUT ${CMAKE_CURRENT_BINARY_DIR}/schema/game/)
+message(STATUS "Compiling flatbuffers schema")
+
+set(FLATBUFFERS_GAME_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/schema/include/)
+
+message(STATUS "Using ${FLATBUFFERS_GAME_INCLUDE} for include directory")
+
+set(FLATBUFFERS_GAME_OUT ${FLATBUFFERS_GAME_INCLUDE}voxels/protocols/game/schema)
+
+message(STATUS "Using ${FLATBUFFERS_GAME_OUT} for compiled output directory")
+
 set(FLATBUFFERS_GAME_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/schema/game)
+
+message(STATUS "Using ${FLATBUFFERS_GAME_SOURCE} as a flatbuffers source directory")
 
 add_custom_target(flatbuffers_compilation_game
     COMMAND
@@ -51,7 +76,7 @@ add_library(voxels_game_raw_types INTERFACE)
 # Ensure that our custom compilation target is run before generating this library
 add_dependencies(voxels_game_raw_types flatbuffers_compilation_game)
 # Add these as includes for our main networking library
-target_include_directories(voxels_game_raw_types INTERFACE ${FLATBUFFERS_GAME_OUT})
+target_include_directories(voxels_game_raw_types INTERFACE ${FLATBUFFERS_GAME_INCLUDE})
 
 # create the main library
 add_library(voxels_networking INTERFACE)

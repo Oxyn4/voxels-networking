@@ -39,7 +39,7 @@ namespace voxels::protocols::game::quic {
 
     template<class RootMessageT>
     class Stream<RootMessageT, Client> {
-        using StreamEventDispatcherT = EventDispatcher;
+        using StreamEventDispatcherT = StreamEventDispatcher<RootMessageT, Client>;
     protected:
         StreamEventDispatcherT* Dispatcher;
 
@@ -51,7 +51,7 @@ namespace voxels::protocols::game::quic {
 
     template<class RootMessageT>
     class Stream<RootMessageT, Server> {
-        using StreamEventDispatcherT = StreamEventDispatcher<RootMessageT>;
+        using StreamEventDispatcherT = StreamEventDispatcher<RootMessageT, Server>;
     protected:
         StreamEventDispatcherT* Dispatcher;
 

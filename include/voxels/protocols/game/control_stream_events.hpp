@@ -15,56 +15,61 @@ License along with the voxels networking library. If not, see <https://www.gnu.o
 
 #include "stream_events.hpp"
 
-namespace voxels::protocols::game {
-    template<LocalEndpointType EndpointType = Client>
+namespace voxels::protocols::game
+{
+    template <LocalEndpointType EndpointType = Client>
     class ControlStream;
 }
 
 
-namespace voxels::protocols::game::events {
- template<LocalEndpointType EndpointT = Client>
- struct ControlStreamEvent {
-  using ControlStreamT = ControlStream<EndpointT>;
+namespace voxels::protocols::game::events
+{
+    template <LocalEndpointType EndpointT = Client>
+    struct ControlStreamEvent
+    {
+        using ControlStreamT = ControlStream<EndpointT>;
 
-  std::weak_ptr<ControlStreamT> ControlStream_;
- };
+        std::weak_ptr<ControlStreamT> ControlStream_;
+    };
 
- template<LocalEndpointType EndpointT = Client>
- struct IdentityReceived;
+    template <LocalEndpointType EndpointT = Client>
+    struct IdentityReceived;
 
- template<>
- struct IdentityReceived<Client> : ControlStreamEvent<Client>, Received<int, Client> {
-  using Received::operator*;
-  using Received::operator->;
- };
+    template <>
+    struct IdentityReceived<Client> : ControlStreamEvent<Client>, Received<int, Client>
+    {
+        using Received::operator*;
+        using Received::operator->;
+    };
 
- template<>
- struct IdentityReceived<Server> : ControlStreamEvent<Server>, Received<std::string, Server> {
-  using Received::operator*;
-  using Received::operator->;
- };
-
-
- template<LocalEndpointType EndpointT = Client>
- struct IdentitySent;
-
- template<>
- struct IdentitySent<Client> : ControlStreamEvent<Client>, Sent<int, Client> {
-  using Sent::operator*;
-  using Sent::operator->;
- };
-
- template<>
- struct IdentitySent<Server> : ControlStreamEvent<Server>, Sent<std::string, Server> {
-  using Sent::operator*;
-  using Sent::operator->;
- };
-
- using ServerIdentitySent = IdentitySent<Server>;
- using ServerIdentityReceived = IdentitySent<Server>;
-
- using ClientIdentitySent = IdentitySent<Client>;
- using ClientIdentityReceived = IdentityReceived<Client>;
+    template <>
+    struct IdentityReceived<Server> : ControlStreamEvent<Server>, Received<std::string, Server>
+    {
+        using Received::operator*;
+        using Received::operator->;
+    };
 
 
+    template <LocalEndpointType EndpointT = Client>
+    struct IdentitySent;
+
+    template <>
+    struct IdentitySent<Client> : ControlStreamEvent<Client>, Sent<int, Client>
+    {
+        using Sent::operator*;
+        using Sent::operator->;
+    };
+
+    template <>
+    struct IdentitySent<Server> : ControlStreamEvent<Server>, Sent<std::string, Server>
+    {
+        using Sent::operator*;
+        using Sent::operator->;
+    };
+
+    using ServerIdentitySent = IdentitySent<Server>;
+    using ServerIdentityReceived = IdentitySent<Server>;
+
+    using ClientIdentitySent = IdentitySent<Client>;
+    using ClientIdentityReceived = IdentityReceived<Client>;
 }

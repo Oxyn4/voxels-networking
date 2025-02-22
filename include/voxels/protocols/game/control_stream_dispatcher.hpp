@@ -57,7 +57,7 @@ namespace voxels::protocols::game {
     };
 
     template<>
-    class ControlStreamDispatcher<Server> : public StreamEventDispatcher<raw::control_stream::Message, Server> {
+    class ControlStreamDispatcher<Server> final : public StreamEventDispatcher<raw::control_stream::Message, Server> {
       	// specialization of response and event types
         using IdentityResponseT = responses::Identity<Server>;
         using IdentityReceivedEventT = events::IdentityReceived<Client>;

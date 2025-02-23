@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Dependencies
-        run: sudo apt-get install doxygen cmake -y
+        run: sudo apt-get install doxygen cmake graphviz -y
 
       - name: Generate cmake target
         run: |

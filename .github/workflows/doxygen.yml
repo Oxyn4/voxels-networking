@@ -28,7 +28,8 @@ jobs:
       - name: Clone Hugo Site Repository
         run: |
           git clone https://github.com/Oxyn4/Oxyn4.github.io hugo-site
-          rm -rf hugo-site/static/doxygen  # Clean old docs
+          rm -rf hugo-site/static/doxygen/voxels-networking  # Clean old docs
+          mkdir -p hugo-site/static/doxygen/voxels-networking
           cp -r docs/html hugo-site/static/doxygen  # Copy new docs
 
       - name: Commit and Push to Hugo Site

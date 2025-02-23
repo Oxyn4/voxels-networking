@@ -1,4 +1,3 @@
-
 cmake_minimum_required(VERSION 3.10)
 
 project(
@@ -7,6 +6,8 @@ project(
         DESCRIPTION "Documentation for voxels networking"
         HOMEPAGE_URL "https://www.github.com/Oxyn4/voxels-networking"
 )
+
+message(STATUS "Compiling voxels-networking-documentation")
 
 find_package(Doxygen)
 

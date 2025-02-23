@@ -11,19 +11,7 @@ project(
         HOMEPAGE_URL "https://www.github.com/Oxyn4/voxels-networking"
 )
 
-find_package(Doxygen)
-
-if (DOXYGEN_FOUND)
-    message(STATUS "Found doxygen")
-    add_custom_target(docs ALL
-            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs
-            COMMENT "Generating API documentation with Doxygen"
-            VERBATIM
-    )
-else()
-    message(STATUS "Unable to find Doxygen")
-endif ()
+add_subdirectory(docs/)
 
 # find boost dependencies
 # allows us to use them in our project
@@ -47,10 +35,10 @@ set(FLATBUFFERS_GAME_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/schema/game)
 message(STATUS "Using ${FLATBUFFERS_GAME_SOURCE} as a flatbuffers source directory")
 
 add_custom_target(flatbuffers_compilation_game
-    COMMAND
+        COMMAND
         # create our directory for our compiled flatbuffers schema
         mkdir -p ${FLATBUFFERS_GAME_OUT}
-    COMMAND
+        COMMAND
         # generate our compiled flatbuffers schema
         flatc
         # generate c++ bindings
@@ -68,7 +56,7 @@ add_custom_target(flatbuffers_compilation_game
         -o ${FLATBUFFERS_GAME_OUT}
         # the root source file contains includes for other protocol buffer files
         ${FLATBUFFERS_GAME_SOURCE}/control_stream.fbs
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # create a header only library consisting of our flatbuffer generated header files
@@ -92,13 +80,13 @@ add_dependencies(voxels_networking flatbuffers_compilation_game)
 # build examples
 
 add_executable(examples_server
-    examples/server.cpp
+        examples/server.cpp
 )
 
 target_link_libraries(examples_server voxels_networking)
 
 add_executable(examples_client
-    examples/client.cpp
+        examples/client.cpp
 )
 
 target_link_libraries(examples_client voxels_networking)

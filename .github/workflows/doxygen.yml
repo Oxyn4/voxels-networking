@@ -20,7 +20,7 @@ jobs:
       - name: Generate cmake target
         run: |
           mkdir -p ./cmake-build-docs
-          cmake -B cmake-build-docs --target docs .
+          cmake -B cmake-build-docs --build --target docs .
 
       - name: Clone Hugo Site Repository
         run: |

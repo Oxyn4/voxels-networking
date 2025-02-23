@@ -1,0 +1,38 @@
+name: Generate and Deploy Doxygen
+
+on:
+  push:
+    branches:
+      - main  # Trigger when pushing to main
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  build-doxygen:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: sudo apt-get install doxygen cmake -y
+
+      - name: Generate cmake target
+        run: |
+          mkdir -p ./cmake-build-docs
+          cmake -B cmake-build-docs --target docs .
+
+      - name: Clone Hugo Site Repository
+        run: |
+          git clone https://github.com/Oxyn4/Oxyn4.github.io hugo-site
+          rm -rf hugo-site/static/doxygen  # Clean old docs
+          cp -r docs/html hugo-site/static/doxygen  # Copy new docs
+
+      - name: Commit and Push to Hugo Site
+        run: |
+          cd hugo-site
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add static/doxygen
+          git commit -m "Update Doxygen docs" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.HUGO_PAT }}@github.com/Oxyn4/Oxyn4.github.io.git main

@@ -17,12 +17,12 @@ if (DOXYGEN_FOUND)
             COMMAND
             mkdir -p ${CMAKE_CURRENT_SOURCE_DIR}/generated/
             COMMAND
-            python -m venv .venv
+            python3 -m venv .venv
             COMMAND
             source ./.venv/bin/activate
             COMMAND
             #install our dependencies
-            pip install sphinx breathe
+            pip3 install sphinx breathe
             COMMAND
             ${DOXYGEN_EXECUTABLE} Doxyfile
             COMMAND

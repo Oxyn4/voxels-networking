@@ -11,27 +11,24 @@ message(STATUS "Compiling voxels-networking-documentation")
 
 find_package(Doxygen)
 
+find_program(SPHINX_BUILD_EXECUTABLE NAMES sphinx-build)
+
+if (${SPHINX_BUILD_EXECUTABLE} STREQUAL "${SPHINX_BUILD_EXECUTABLE}-NOTFOUND")
+    message(FATAL_ERROR "could not find sphinx-build executable via cmake find_package() !")
+endif ()
+
 if (DOXYGEN_FOUND)
     message(STATUS "Found doxygen")
     add_custom_target(docs ALL
             COMMAND
             mkdir -p ${CMAKE_CURRENT_SOURCE_DIR}/generated/
             COMMAND
-            python3 -m venv .venv
-            COMMAND
-            source ./.venv/bin/activate
-            COMMAND
-            #install our dependencies
-            pip3 install sphinx breathe
-            COMMAND
             ${DOXYGEN_EXECUTABLE} Doxyfile
             COMMAND
-            sphinx-build
+            ${SPHINX_BUILD_EXECUTABLE}
             -M singlehtml
             .
             generated/
-            COMMAND
-            deactivate
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
             COMMENT "Generating xml API documentation with Doxygen"
             VERBATIM

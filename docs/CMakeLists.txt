@@ -14,9 +14,26 @@ find_package(Doxygen)
 if (DOXYGEN_FOUND)
     message(STATUS "Found doxygen")
     add_custom_target(docs ALL
-            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
+            COMMAND
+            mkdir -p ${CMAKE_CURRENT_SOURCE_DIR}/generated/
+            COMMAND
+            python -m venv .venv
+            COMMAND
+            source ./.venv/bin/activate
+            COMMAND
+            #install our dependencies
+            pip install sphinx breathe
+            COMMAND
+            ${DOXYGEN_EXECUTABLE} Doxyfile
+            COMMAND
+            sphinx-build
+            -M singlehtml
+            .
+            generated/
+            COMMAND
+            deactivate
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
-            COMMENT "Generating API documentation with Doxygen"
+            COMMENT "Generating xml API documentation with Doxygen"
             VERBATIM
     )
 else ()

@@ -30,7 +30,7 @@ jobs:
           git clone https://github.com/Oxyn4/Oxyn4.github.io hugo-site
           rm -rf hugo-site/static/doxygen/voxels-networking  # Clean old docs
           mkdir -p hugo-site/static/doxygen/
-          mv docs/html hugo-site/static/doxygen/voxels-networking  # Move new docs
+          mv docs/generated/singlehtml hugo-site/static/doxygen/voxels-networking  # Move new docs
 
       - name: Commit and Push to Hugo Site
         run: |

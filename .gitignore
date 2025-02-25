@@ -132,6 +132,7 @@ CMakeUserPresets.json
 # External projects
 *-prefix/
 
-docs/html/
-docs/latex/
-docs/xml/
+docs/generated
+docs/generated/html/
+docs/generated/xml/
+docs/.venv
